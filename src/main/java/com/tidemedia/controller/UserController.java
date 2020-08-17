@@ -64,7 +64,7 @@ public class UserController {
 	public Layui queryAllUser(UserQuery userQuery) {
 		System.out.println("===用户模块-查询全部用户===");
         System.out.println("===用户模块-查询全部用户===");
-        System.out.println("===用户模块-查询全部用户===");
+        System.out.println("===hahahaha===");
 		userQuery.setStartlimit((userQuery.getPage()-1)*userQuery.getLimit());
 		List<User> u= userService.queryAllUser(userQuery);
 		for (User user : u) {
