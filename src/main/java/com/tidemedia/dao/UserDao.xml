@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tidemedia.dao.UserDao">
+
+	<!--根据用户名查用户信息 -->
+	<select id="selectByUserName" parameterType="String" resultType="com.tidemedia.entity.User">
+		select userId,userName,nickName,hobby,sex,phone,password,identity,imgUrl,ip
+		 from user
+		 <where>
+		 	userName = #{userName}
+		 </where>
+	</select>
+	
+	<!-- 用户新增 -->
+	<insert id="userAdd" parameterType="com.tidemedia.entity.User">
+		insert into user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="userId != null" >
+	        	userId,
+	      	</if>
+	      	<if test="nickName != null" >
+	        	nickName,
+	      	</if>
+	      	<if test="userName != null" >
+	        	userName,
+	      	</if>
+	      	<if test="hobby != null" >
+	        	hobby,
+	      	</if>
+	      	<if test="sex != null" >
+	        	sex,
+	      	</if>
+	      	<if test="phone != null" >
+	        	phone,
+	      	</if>
+	      	<if test="password != null" >
+	        	password,
+	      	</if>
+	      	<if test="identity != null" >
+	        	identity,
+	      	</if>
+	      	<if test="imgUrl != null" >
+	        	imgUrl,
+	      	</if>
+	      	<if test="ip != null" >
+	        	ip,
+	      	</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="userId != null" >
+	        	#{userId},
+	      	</if>
+	      	<if test="nickName != null" >
+	        	#{nickName},
+	      	</if>
+	      	<if test="userName != null" >
+	        	#{userName},
+	      	</if>
+	      	<if test="hobby != null" >
+	        	#{hobby},
+	      	</if>
+	      	<if test="sex != null" >
+	        	#{sex},
+	      	</if>
+	      	<if test="phone != null" >
+	        	#{phone},
+	      	</if>
+	      	<if test="password != null" >
+	        	#{password},
+	      	</if>
+	      	<if test="userId != null" >
+	        	#{userId},
+	      	</if>
+	      	<if test="identity != null" >
+	        	#{identity},
+	      	</if>
+	      	<if test="imgUrl != null" >
+	        	#{imgUrl},
+	      	</if>
+	      	<if test="ip != null" >
+	        	#{ip},
+	      	</if>
+		</trim>
+	</insert>
+	
+	<!-- 查询所有 -->
+	<select id="queryAllUser" parameterType="com.tidemedia.entity.UserQuery" resultType="com.tidemedia.entity.User">
+		select userId,nickName,userName,hobby,sex,phone,password,identity,imgUrl,ip
+		from user
+		order by userId
+		limit #{startlimit},#{limit}
+	</select>
+	
+	<!-- 按id查询单个用户 -->
+	<select id="queryUserById" parameterType="Long" resultType="com.tidemedia.entity.User">
+		select userId,nickName,hobby,sex,phone,password,identity,imgUrl,ip
+		from user
+		<where>
+			userId = #{userid}
+		</where>
+	</select>
+	
+	<!-- 删除 -->
+	<delete id="deleteUserById" parameterType="Long">
+		delete from user
+		<where>
+			userId in
+			<foreach collection="array" item="userId" separator="," open="(" close=")">
+				#{userId}
+			</foreach>
+		</where>
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="userUpdate" parameterType="com.tidemedia.entity.User">
+		update user
+		<set>
+			<if test="nickName != null">
+				nickName = #{nickName},
+			</if>
+			<if test="userName != null">
+				userName = #{userName},
+			</if>
+			<if test="hobby != null">
+				hobby = #{hobby},
+			</if>
+			<if test="sex != null">
+				sex = #{sex},
+			</if>
+			<if test="phone != null">
+				phone = #{phone},
+			</if>
+			<if test="password != null">
+				password = #{password},
+			</if>
+			<if test="identity != null">
+				identity = #{identity},
+			</if>
+			<if test="imgUrl != null">
+				imgUrl = #{imgUrl},
+			</if>
+			<if test="ip != null">
+				ip = #{ip}
+			</if>
+		</set>
+		<where>
+			userId = #{userId}
+		</where>
+	</update>
+	
+	<!-- 查询数量 -->
+	<select id="queryUserCount" resultType="int">
+		select
+		count(*)
+		from user
+	</select>
+</mapper>
