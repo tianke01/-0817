@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +20,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.annotation.Resource;
 
+import eu.bitwalker.useragentutils.Browser;
+import eu.bitwalker.useragentutils.OperatingSystem;
+import eu.bitwalker.useragentutils.UserAgent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,7 +45,7 @@ import redis.clients.jedis.Jedis;
 public class UserController {
 	@Resource
 	public UserService userService;	
-	
+
 //	@Autowired
 //	private Jedis jedis;
 	
@@ -67,6 +72,7 @@ public class UserController {
         System.out.println("===hahahaha===");
 		userQuery.setStartlimit((userQuery.getPage()-1)*userQuery.getLimit());
 		List<User> u= userService.queryAllUser(userQuery);
+
 		for (User user : u) {
 			user.setPassword(CryptoUtil.decode(user.getPassword()));
 		}
@@ -205,6 +211,22 @@ public class UserController {
 		}
 		userService.deleteUserById(ids2);
 		return "true";
+	}
+
+	@RequestMapping(value = "/aaa")
+	@ResponseBody
+	public void aaa( HttpServletRequest request){
+		UserAgent userAgent = UserAgent.parseUserAgentString(request.getHeader("User-Agent"));
+		Browser browser = userAgent.getBrowser();
+		OperatingSystem os = userAgent.getOperatingSystem();
+		Pattern pattern = Pattern.compile(";\\s?(\\S*?\\s?\\S*?)\\s?(Build)?/");
+		String ua = request.getHeader("User-Agent");
+		Matcher matcher = pattern.matcher(ua);
+		String model = null;
+		if (matcher.find()) {
+			model = matcher.group(1).trim();
+			System.out.println("通过userAgent解析出机型：" + model);
+		}
 	}
 	
 	public static String getUserIP(HttpServletRequest request)
