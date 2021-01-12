@@ -1,35 +1,99 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-    <title>Title</title>
-    <link rel="stylesheet" href="layui/css/layui.css" media="all">
-</head>
-<body>
-<div class="layui-tab">
-    <ul class="layui-tab-title">
-        <li class="layui-this">网站设置</li>
-        <li>用户管理</li>
-        <li>权限分配</li>
-        <li>商品管理</li>
-        <li>订单管理</li>
-    </ul>
-    <div class="layui-tab-content">
-        <div class="layui-tab-item layui-show">
-            1. 高度默认自适应，也可以随意固宽。
-            <br>2. Tab进行了响应式处理，所以无需担心数量多少。
-        </div>
-        <div class="layui-tab-item">内容2</div>
-        <div class="layui-tab-item">内容3</div>
-        <div class="layui-tab-item">内容4</div>
-        <div class="layui-tab-item">内容5</div>
-    </div>
-</div>
-<script src="layui/layui.js" charset="utf-8"></script>
-<script>
-    layui.use('element', function(){
-        var $ = layui.jquery
-            ,element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
-    });
-</script>
-</body>
-</html>
+<%@ page import="tidemedia.cms.system.Document" %>
+<%@ page import="tidemedia.cms.system.CmsCache" %>
+<%@ page import="tidemedia.cms.util.*" %>
+<%@ page import="java.io.BufferedReader" %>
+<%@ page import="java.io.InputStreamReader" %>
+<%@ page import="java.io.IOException" %>
+<%@ page import="java.time.LocalDateTime" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
+<%@ page import="java.util.HashMap" %>
+<%@ page import="tidemedia.cms.system.ItemUtil" %>
+<%@ page import="tidemedia.cms.base.TableUtil" %>
+<%@ page import="java.net.*" %>
+<%@ page import="java.sql.ResultSet" %>
+<%@ page import="tidemedia.cms.system.Channel" %>
+<%@ page import="org.json.JSONArray" %>
+<%@ page import="tidemedia.cms.base.MessageException" %>
+<%@ page import="java.sql.SQLException" %>
+<%@ include file="../../config1.jsp"%>
+
+<!-- 创建人：田轲  -->
+
+<%
+
+    String aaa=selectChannelid(16519);
+    out.println(aaa);
+    //out.println("--------------------------:"+json.toString());
+
+    //TableUtil tu = new TableUtil();
+    /*TableUtil tu_user = new TableUtil("user");
+  	String sql="select * from userinfo where id=420 ";
+	ResultSet Rs = tu_user.executeQuery(sql);
+  	if(Rs.next()){
+  	    out.println("--------------------------:"+Rs.getString("Name"));
+  	}*/
+	/*String sql = "show create table weixin_account";
+	ResultSet rs = tu.executeQuery(sql);
+	if(rs.next()){
+		out.print(rs.getString("create table"));
+	}
+	tu.closeRs(rs);*/
+
+    //String tableName = CmsCache.getChannel("code").getTableName();
+    // out.println("--------------------------:"+tableName);
+    //TableUtil tu = new TableUtil();
+    //channel表增加内容页布局字段content_layout
+    //tu.executeUpdate("alter table channel add column  EditorType int(1) default 0;");
+    /*String sql = "select * from "+tableName +" where Tel='15704661426' order by CreateDate desc limit 1";
+    ResultSet rs  = tu.executeQuery(sql);
+    while(rs.next()){
+        String Title=rs.getString("Title");
+        //String username=rs.getString("name");
+        out.println("Title"+Title);
+    }*/
+
+    /*String tablename = CmsCache.getChannel("register").getTableName();
+    System.out.println("tablename:"+tablename);
+    TableUtil tu = new TableUtil();
+    String sql = "select * from "+tablename;
+    System.out.println(sql);
+    ResultSet rs  = tu.executeQuery(sql);
+    while(rs.next()){
+        int id=rs.getInt("id");
+        //String username=rs.getString("name");
+        out.println("id"+id);
+    }
+
+    tu.closeRs(rs);*/
+
+    /*
+    TableUtil tu = new TableUtil("user");
+    String sql = "select * from userinfo where id=420";
+    ResultSet rs  = tu.executeQuery(sql);
+    while(rs.next()){
+        int id=rs.getInt("id");
+        String username=rs.getString("name");
+        out.println("id"+id+username);
+    }
+    tu.closeRs(rs);*/
+%>
+
+<%!
+    public static String selectChannelid(int channelid) throws MessageException, SQLException {
+        String channelids=channelid+",";
+        String Sql = "select * from channel where Parent=" + channelid;
+        TableUtil tu = new TableUtil();
+        ResultSet Rs = tu.executeQuery(Sql);
+        while (Rs.next()) {
+            int id = Rs.getInt("id");
+            channelids+=id+",";
+        }
+        tu.closeRs(Rs);
+        channelids=channelids.substring(0,channelids.length()-1);
+        return channelids;
+    }
+%>
+
+
+

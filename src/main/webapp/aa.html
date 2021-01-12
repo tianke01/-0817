@@ -1,33 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" href="layui/css/layui.css" media="all">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            line-height: 1;
+            font-size: .28rem
+            /* 14/50 */
+        ;
+            box-sizing: border-box;
+        }
+
+        html,
+        body,
+        .tcenter-version {
+            width: 100%;
+            height: 100%;
+        }
+
+        .tcenter-version {
+            background-image: url(../images/tcenter-version-bg.png);
+            background-size: 100% 100%;
+            position: relative;
+        }
+        .tcenter-version-container{
+            position: absolute;
+            top: 45%;left: 50%;
+            transform: translate(-50%,-50%);
+        }
+
+        .tcenter-version-logo {
+            text-align: center;
+        }
+        .tcenter-version-logo img {
+            width: 4rem /* 200/50 */;
+            height: 1rem /* 50/50 */;
+            object-fit: contain;
+        }
+        .tcenter-version-item input{
+            width: 5.3rem /* 265/50 */;
+            height: .8rem /* 40/50 */;
+            color: #333;
+            font-size: .3rem /* 15/50 */;
+            outline: none;
+            border: none;
+            border-radius: .08rem /* 4/50 */;
+            padding: 0 .2rem /* 10/50 */;
+            margin-top: .4rem /* 20/50 */;
+        }
+        .tcenter-version-item input[type='submit']{
+            background-color: #0089FF;color: #fff;
+            margin-top: .7rem /* 35/50 */;
+            cursor: pointer;
+        }
+        .tcenter-version-footer{
+            position: absolute;
+            bottom: 0; left: 0;right: 0;
+            color: #fff;
+            text-align: center;
+            font-size: .24rem /* 12/50 */;
+            padding: .52rem /* 26/50 */ 0;
+        }
+    </style>
+    <script>
+        var Global = {
+            init: function () {
+                this.htmlFontSize();
+            },
+            //设置根元素的font-size
+            htmlFontSize: function () {
+                var doc = document;
+                var win = window;
+                function initFontSize() {
+                    var docEl = doc.documentElement,
+                        resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+                        recalc = function () {
+                            var clientWidth = docEl.clientWidth;
+                            if (!clientWidth) return;
+                            if (clientWidth > 750) {
+                                clientWidth = 750;
+                            }
+                            fontSizeRate = (clientWidth / 350);
+                            var baseFontSize = 50 * fontSizeRate;
+                            docEl.style.fontSize = baseFontSize + 'px';
+                        }
+                    recalc();
+                    if (!doc.addEventListener) return;
+                    win.addEventListener(resizeEvt, recalc, false);
+                    doc.addEventListener('DOMContentLoaded', recalc, false);
+                }
+                initFontSize();
+            }
+        };
+        Global.init();
+    </script>
 </head>
-<body style="background: #C04040">
-<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
-    <ul class="layui-tab-title">
-        <li class="layui-this">网站设置</li>
-        <li>用户管理</li>
-        <li>权限分配</li>
-        <li>商品管理</li>
-        <li>订单管理</li>
-    </ul>
-    <div class="layui-tab-content" style="height: 100px;">
-        <div class="layui-tab-item layui-show">内容不一样是要有，因为你可以监听tab事件（阅读下文档就是了）</div>
-        <div class="layui-tab-item">内容2</div>
-        <div class="layui-tab-item">内容3</div>
-        <div class="layui-tab-item">内容4</div>
-        <div class="layui-tab-item">内容5</div>
+
+<body>
+<div class="tcenter-version">
+    <div class="tcenter-version-container">
+        <div class="tcenter-version-logo">
+            <img src="../images/tcenter-version-logo.png" alt="logo">
+        </div>
+        <form action="">
+            <div class="tcenter-version-item">
+                <input name="phone" type="number" placeholder="电话" id="number">
+            </div>
+            <div class="tcenter-version-item">
+                <input name="password" type="password" placeholder="密码" id="password">
+            </div>
+            <div class="tcenter-version-item">
+                <input type="submit" value="登录" id="userLogin">
+            </div>
+        </form>
+    </div>
+    <div class="tcenter-version-footer">
+        <span>泰德网聚</span>
+        <span>版权所有</span>
     </div>
 </div>
-<script src="layui/layui.js" charset="utf-8"></script>
 <script>
-    layui.use('element', function(){
-        var $ = layui.jquery
-            ,element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
-    });
+    var LocString = String(window.document.location.href);
+    function getQueryStr(str) {
+        var rs = new RegExp("(^|)" + str + "=([^&]*)(&|$)", "gi").exec(LocString), tmp;
+        if (tmp = rs) {
+            return tmp[2];
+        }
+        return "";
+    }
+    var url = getQueryStr("url");
+    $("#userLogin").click(function() {
+        var number = $("#number").val();
+        var password = $("#password").val();
+        alert("-------"+number+"-------"+password+"------"+url);
+    })
 </script>
 </body>
+
 </html>

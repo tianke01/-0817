@@ -30,9 +30,10 @@
 				org.json.*"%>
 <%@ page contentType="text/html;charset=utf-8" %>
 <%@ include file="../config1.jsp"%>
-<!--
-作用：二维码访问记录入ES
--->
+
+<!--作用：二维码访问记录入ES-->
+<!-- 创建人：田轲  -->
+
 <%!
     public static String HOST = "";
     public static int PORT = 0;
@@ -67,28 +68,29 @@
     }
     //入库
     public static void addES(int globalid) throws IOException, ParseException,SQLException,MessageException {
-        if (!indexExists("qr_code_record")) {//索引不存在，先创建索引
-            createIndex("qr_code_record","document");
+        if (!indexExists("qr_code_record_es")) {//索引不存在，先创建索引
+            createIndex("qr_code_record_es","document");
         }
 
         Document doc = new Document(globalid);
-        System.out.println("doc.getStatus()"+doc.getStatus());
         if(doc!=null){
-            IndexResponse response = client.prepareIndex("qr_code_record", "document", globalid+"")
+            IndexResponse response = client.prepareIndex("qr_code_record_es", "document", globalid+"")
                     .setSource(XContentFactory.jsonBuilder().startObject()
                             .field("id", globalid)
                             .field("channelid", doc.getChannelID())
-                            .field("title", doc.getTitle())
+                            .field("title", Util.convertNull(doc.getTitle()))
                             .field("access_address", Util.convertNull(doc.getValue("access_address")))
                             .field("access_source", Util.convertNull(doc.getValue("access_source")))
                             .field("system_type", Util.convertNull(doc.getValue("system_type")))
                             .field("period", Util.convertNull(doc.getValue("period")))
                             .field("qr_codeId", doc.getIntValue("qr_codeId"))
-                            .field("date", Util.convertNull(doc.getCreateDate().substring(0,10)))
+                            .field("day", Util.convertNull(doc.getCreateDate().substring(0,10)))
+                            .field("month", Util.convertNull(doc.getCreateDate().substring(5,7)))
+                            .field("date", Util.convertNull(doc.getCreateDate()))
                             .endObject()).get();
             System.out.println("入库成功！");
         }else{
-            client.prepareDelete("qr_code_record", "document", globalid+"").get();//撤稿或删除
+            client.prepareDelete("qr_code_record_es", "document", globalid+"").get();//撤稿或删除
             System.out.println("入库失败！");
         }
 
@@ -118,11 +120,13 @@
                 .startObject("access_source").field("type","string").field("index","not_analyzed").endObject()
                 .startObject("system_type").field("type","string").field("index","not_analyzed").endObject()
                 .startObject("period").field("type","string").field("index","not_analyzed").endObject()
-                .startObject("qr_codeId").field("type","integer").endObject()
-                .startObject("date").field("type","string").field("index","not_analyzed").endObject()
+                .startObject("qr_codeId").field("type","string").field("index","not_analyzed").endObject()
+                .startObject("day").field("type","string").field("index","not_analyzed").endObject()
+                .startObject("month").field("type","string").field("index","not_analyzed").endObject()
+                .startObject("date").field("type","date").field("format","yyyy-MM-dd HH:mm:ss").endObject()
                 .endObject()
                 .endObject();
-
+        System.out.println("创建索引！");
         //pois：索引名   cxyword：类型名（可以自己定义）
         PutMappingRequest putmap = Requests.putMappingRequest(index).type(type).source(mapping);
         //创建索引
@@ -157,10 +161,10 @@
             }
         }
     }catch (Exception e) {
-        System.out.println(e.getMessage());
+        e.printStackTrace();
+        //System.out.println(e.getMessage());
     }
 %>
-
 
 
 

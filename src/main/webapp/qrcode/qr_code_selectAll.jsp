@@ -124,7 +124,7 @@
     }
 
     public static String getZeroDate(java.util.Date date, int days) {
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -135,7 +135,7 @@
     }
 
     public static String getCurrentDate(java.util.Date date) {
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         return df.format(calendar.getTime());
@@ -178,9 +178,9 @@
         //boolQuery.must(QueryBuilders.wildcardQuery("qr_codeId", "1"));
         //根据 任务id分组进行求和
 
-        SearchRequestBuilder sbuilder = client.prepareSearch("qr_code_record").setTypes("document").setQuery(boolQuery);
+        SearchRequestBuilder sbuilder = client.prepareSearch("qr_code_record_es").setTypes("document").setQuery(boolQuery);
 
-        //SearchRequestBuilder sbuilder = client.prepareSearch("qr_code_record").setTypes("document");
+        //SearchRequestBuilder sbuilder = client.prepareSearch("qr_code_record_es").setTypes("document");
         TermsAggregationBuilder termsBuilder= AggregationBuilders.terms("sum").field("qr_codeId");
         sbuilder.addAggregation(termsBuilder);
         SearchResponse responses= sbuilder.execute().actionGet();
